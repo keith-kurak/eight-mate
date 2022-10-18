@@ -7,7 +7,7 @@ export default function Home() {
       {/* Use the `Screen` component to configure the layout. */}
       <Stack.Screen options={{ title: "Overview", headerShown:true, }} />
       {/* Use the `Link` component to enable optimized client-side routing. */}
-      <Link href="/tutorials/colors">Go to Colors Tutorial</Link>
+      <Link href="/colors">Go to Colors Tutorial</Link>
     </View>
   );
 }
