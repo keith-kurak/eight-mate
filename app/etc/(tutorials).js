@@ -5,7 +5,7 @@ export default function Layout() {
     <Stack
       initialRouteName="index"
       screenOptions={{
-        headerShown:true,
+        headerShown:false,
         headerStyle: {
           backgroundColor: "#f4511e",
         },

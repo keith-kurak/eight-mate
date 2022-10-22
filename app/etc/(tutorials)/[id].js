@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { Link, Stack } from "expo-router";
-import Colors from '../../src/components/tutorials/Colors';
+import Colors from '../../../src/components/Colors';
 
 export default function TutorialScreen({ route }) {
   let tutorial;
@@ -10,7 +10,7 @@ export default function TutorialScreen({ route }) {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Stack.Screen options={{ title: "Colors", headerShown:true, }} />
+      <Stack.Screen options={{ title: "Colors" }} />
       {tutorial}
     </View>
   );
