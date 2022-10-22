@@ -10,6 +10,7 @@ export default function Index() {
   const { top, bottom } = useSafeAreaInsets();
 
   const setCanvasPixel = useCallback((pixel) => {
+    console.log(pixel);
     canvas.setPixel({x: pixel.x, y: pixel.y, colorIndex: selectedColorIndex});
     setCanvas(canvas.clone());
   }, [canvas, selectedColorIndex]);
