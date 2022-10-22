@@ -15,7 +15,7 @@ function Pixel({ color, boxSize, x, y }) {
   );
 }
 
-export default function SpriteCanvas({ canvas, onPressPixel }) {
+export default function SpriteCanvas({ canvas, onPressPixel, isEditable = true, boxSize = 40 }) {
   const dragGesture = Gesture.Pan().onUpdate((e) => {
     const x = e.x;
     const y = e.y;
@@ -33,14 +33,14 @@ export default function SpriteCanvas({ canvas, onPressPixel }) {
   const composed = Gesture.Race(tapGesture, dragGesture);
 
   return (
-    <GestureDetector gesture={composed}>
+    <GestureDetector gesture={isEditable ? composed : null}>
       <View>
         {canvas.grid.map((row, yIndex) => (
           <View key={yIndex.toString()} style={{ flexDirection: "row" }}>
             {row.map((colorIndex, xIndex) => (
               <View key={xIndex.toString()}>
                 <Pixel
-                  boxSize={40}
+                  boxSize={boxSize}
                   color={
                     pico8PaletteColors.find((c) => c.index === colorIndex).color
                   }

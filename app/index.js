@@ -7,13 +7,27 @@ import DrawGrid from "../src/data/DrawGrid";
 export default function Index() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [canvas, setCanvas] = useState(new DrawGrid(8, 8));
+  const [sprites, setSprites] = useState([canvas]);
   const { top, bottom } = useSafeAreaInsets();
 
-  const setCanvasPixel = useCallback((pixel) => {
-    console.log(pixel);
-    canvas.setPixel({x: pixel.x, y: pixel.y, colorIndex: selectedColorIndex});
-    setCanvas(canvas.clone());
-  }, [canvas, selectedColorIndex]);
+  const setCanvasPixel = useCallback(
+    (pixel) => {
+      console.log(pixel);
+      canvas.setPixel({
+        x: pixel.x,
+        y: pixel.y,
+        colorIndex: selectedColorIndex,
+      });
+      setCanvas(canvas.clone());
+    },
+    [canvas, selectedColorIndex]
+  );
+
+  const addSprite = useCallback(() => {
+    const newSprite = new DrawGrid(8, 8);
+    setSprites([...sprites, newSprite]);
+    setCanvas(newSprite);
+  })
 
   return (
     <View
@@ -29,6 +43,8 @@ export default function Index() {
         selectedColorIndex={selectedColorIndex}
         canvas={canvas}
         onPressCanvasPixel={setCanvasPixel}
+        sprites={sprites}
+        addSprite={addSprite}
       />
     </View>
   );
