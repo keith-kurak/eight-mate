@@ -4,15 +4,21 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SpriteEditor from "../src/components/SpriteEditor";
 import DrawGrid from "../src/data/DrawGrid";
 
+const allSprites = [];
+for (let i = 0; i < 21; i++) {
+  allSprites.push(new DrawGrid(8, 8));
+}
+
 export default function Index() {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-  const [canvas, setCanvas] = useState(new DrawGrid(8, 8));
-  const [sprites, setSprites] = useState([canvas]);
+  const [sprites, setSprites] = useState(allSprites);
+  const [canvas, setCanvas] = useState(sprites[0]);
+  const [selectedSpriteIndex, setSelectedSpriteIndex] = useState(0);
   const { top, bottom } = useSafeAreaInsets();
 
   const setCanvasPixel = useCallback(
     (pixel) => {
-      console.log(pixel);
+      //console.log(pixel);
       canvas.setPixel({
         x: pixel.x,
         y: pixel.y,
@@ -23,10 +29,10 @@ export default function Index() {
     [canvas, selectedColorIndex]
   );
 
-  const addSprite = useCallback(() => {
-    const newSprite = new DrawGrid(8, 8);
-    setSprites([...sprites, newSprite]);
-    setCanvas(newSprite);
+  const setSprite = useCallback(index => {
+    console.log('sprite change')
+    setSelectedSpriteIndex(index);
+    setCanvas(allSprites[index]);
   })
 
   return (
@@ -44,7 +50,8 @@ export default function Index() {
         canvas={canvas}
         onPressCanvasPixel={setCanvasPixel}
         sprites={sprites}
-        addSprite={addSprite}
+        onPressSprite={setSprite}
+        selectedSpriteIndex={selectedSpriteIndex}
       />
     </View>
   );

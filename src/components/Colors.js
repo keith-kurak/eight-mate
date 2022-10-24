@@ -1,8 +1,11 @@
 import { View, Text, Pressable } from "react-native";
 import { colorRows, pico8PaletteColors } from "../config/constants";
 import { take, takeRight } from "lodash";
+import { sizes } from "../config/styles";
 
 function ColorBox({ color, boxSize, fontSize, onPress, isSelected }) {
+  const borderWidth = sizes.border;
+
   return (
     <Pressable onPress={onPress}>
       <View
@@ -12,6 +15,7 @@ function ColorBox({ color, boxSize, fontSize, onPress, isSelected }) {
           backgroundColor: color.color,
           justifyContent: "center",
           alignItems: "center",
+          zIndex: 0,
         }}
       >
         <Text
@@ -25,13 +29,13 @@ function ColorBox({ color, boxSize, fontSize, onPress, isSelected }) {
         <View
           style={[
             { position: "absolute", top: 0, right: 0, left: 0, bottom: 0 },
-            isSelected && { borderColor: "#FFF1E8", borderWidth: 4 },
+            isSelected && { borderColor: "#FFF1E8", borderWidth: borderWidth },
           ]}
         />
         <View
           style={[
-            { position: "absolute", top: 4, right: 4, left: 4, bottom: 4 },
-            isSelected && { borderColor: "#000000", borderWidth: 4 },
+            { position: "absolute", top: borderWidth, right: borderWidth, left: borderWidth, bottom: borderWidth },
+            isSelected && { borderColor: "#000000", borderWidth: borderWidth },
           ]}
         />
       </View>
