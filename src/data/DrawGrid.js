@@ -14,6 +14,10 @@ export default class DrawGrid {
     this.grid[y][x] = colorIndex;
   }
 
+  checkPixelColor({x, y}) {
+    return this.grid[y][x];
+  }
+
   clone() {
     const newGrid = new DrawGrid(0,0);
     newGrid.grid = this.grid;

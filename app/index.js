@@ -5,7 +5,7 @@ import SpriteEditor from "../src/components/SpriteEditor";
 import DrawGrid from "../src/data/DrawGrid";
 
 const allSprites = [];
-for (let i = 0; i < 21; i++) {
+for (let i = 0; i < 24; i++) {
   allSprites.push(new DrawGrid(8, 8));
 }
 
@@ -19,21 +19,26 @@ export default function Index() {
   const setCanvasPixel = useCallback(
     (pixel) => {
       //console.log(pixel);
+      // avoid setting the pixel if it's already set to the same color
+      // cause that will cause a re-render
+      if (canvas.checkPixelColor(pixel) === selectedColorIndex) {
+        return;
+      }
       canvas.setPixel({
         x: pixel.x,
         y: pixel.y,
         colorIndex: selectedColorIndex,
       });
+      // stupid hack to force a re-render
       setCanvas(canvas.clone());
     },
     [canvas, selectedColorIndex]
   );
 
-  const setSprite = useCallback(index => {
-    console.log('sprite change')
+  const setSprite = useCallback((index) => {
     setSelectedSpriteIndex(index);
     setCanvas(allSprites[index]);
-  })
+  });
 
   return (
     <View

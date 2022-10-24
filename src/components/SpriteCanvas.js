@@ -68,7 +68,6 @@ export default function SpriteCanvas({ canvas, onPressPixel, isEditable = true, 
           </View>
         ))}
       </View>
-
     </GestureDetector>
   );
 }

@@ -10,7 +10,6 @@ function PressableMiniSprite({ sprite, index, onPressSprite, isSelected }) {
   const onPress = useCallback(() => {
     onPressSprite(index);
   }, [onPressSprite, index]);
-  console.log(`sprite: ${index}`)
   return (
     <Pressable index={index.toString()} onPress={onPress}>
       <View>
@@ -19,7 +18,7 @@ function PressableMiniSprite({ sprite, index, onPressSprite, isSelected }) {
           canvas={sprite}
           onPressPixel={emptyFn}
           isEditable={false}
-          boxSize={6}
+          boxSize={5}
         />
         {isSelected && (
           <View
@@ -43,8 +42,7 @@ function SpriteSheet({ sprites, onPressSprite, selectedSpriteIndex }) {
   return (
     <View
       style={{
-        alignSelf: "center",
-        width: 48 * 7 + 8,
+        width: 40 * 8 + 8,
         flexDirection: "row",
         borderColor: "#000000",
         borderWidth: 4,
@@ -74,22 +72,25 @@ export default function SpriteEditor({
   selectedSpriteIndex,
 }) {
   return (
-    <View style={{ flex: 1, justifyContent: "space-between" }}>
-      <View>
+    <View
+      style={{ flex: 1, justifyContent: "space-between", alignItems: "center" }}
+    >
+      <View style={{ borderColor: "black", borderWidth: 4 }}>
+        <Colors
+          layout="2row"
+          boxSize={40}
+          fontSize={15}
+          onPressColor={onPressColor}
+          selectedColorIndex={selectedColorIndex}
+        />
+      </View>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
-          style={{ borderColor: "black", borderWidth: 4, alignSelf: "center" }}
-        >
-          <Colors
-            layout="2row"
-            boxSize={40}
-            fontSize={15}
-            onPressColor={onPressColor}
-            selectedColorIndex={selectedColorIndex}
-          />
-        </View>
-        <View style={{ marginTop: 20 }} />
-        <View
-          style={{ alignSelf: "center", borderColor: "black", borderWidth: 4 }}
+          style={{
+            alignSelf: "center",
+            borderColor: "black",
+            borderWidth: 4,
+          }}
         >
           <SpriteCanvas canvas={canvas} onPressPixel={onPressCanvasPixel} />
         </View>
