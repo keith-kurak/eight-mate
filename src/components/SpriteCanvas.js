@@ -48,8 +48,10 @@ export default function SpriteCanvas({ canvas, onPressPixel, isEditable = true, 
 
   const composed = Gesture.Race(tapGesture, dragGesture);
 
+  const MaybeGestureDetector = isEditable ? GestureDetector : View;
+
   return (
-    <GestureDetector gesture={isEditable ? composed : null}>
+    <MaybeGestureDetector gesture={composed}>
       <View>
         {canvas.grid.map((row, yIndex) => (
           <View key={yIndex.toString()} style={{ flexDirection: "row" }}>
@@ -68,6 +70,6 @@ export default function SpriteCanvas({ canvas, onPressPixel, isEditable = true, 
           </View>
         ))}
       </View>
-    </GestureDetector>
+    </MaybeGestureDetector>
   );
 }
