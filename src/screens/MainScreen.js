@@ -7,10 +7,9 @@ import { useStore } from '../data/RootStore';
 
 const MainScreen = observer(() => {
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-  const [selectedSpriteIndex, setSelectedSpriteIndex] = useState(0);
   const { top, bottom } = useSafeAreaInsets();
 
-  const { pixelGrid, focusedGrid, setPixelRelativeToFocus } = useStore();
+  const { pixelGrid, focusedGrid, setPixelRelativeToFocus, focusedSprite, setFocusedSprite } = useStore();
 
   const setPixel = useCallback(
     (pixel) => {
@@ -23,9 +22,8 @@ const MainScreen = observer(() => {
     [setPixelRelativeToFocus, selectedColorIndex]
   );
 
-  const setSprite = useCallback((index) => {
-    setSelectedSpriteIndex(index);
-    // TODO: fix
+  const setSprite = useCallback(({ x, y }) => {
+     setFocusedSprite({ x, y })
   });
 
   return (
@@ -41,10 +39,10 @@ const MainScreen = observer(() => {
         onPressColor={setSelectedColorIndex}
         selectedColorIndex={selectedColorIndex}
         focusedSpriteGrid={focusedGrid}
+        focusedSprite={focusedSprite}
         onPressFocusedSpritePixel={setPixel}
         spriteSheetGrid={pixelGrid}
-        onPressSprite={() => {}}
-        selectedSpriteIndex={selectedSpriteIndex}
+        onPressSprite={setSprite}
       />
     </View>
   );

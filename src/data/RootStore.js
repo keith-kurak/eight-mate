@@ -27,18 +27,29 @@ const RootStore = types
         }
       }
       return grid;
+    },
+    get focusedSprite() {
+      return {x: self.focus.x / self.spriteSize, y: self.focus.y / self.spriteSize}
     }
   }))
   .actions((self) => {
     function setPixelRelativeToFocus({ x, y, color }) {
-      self.pixelGrid.setPixel({ x: x + self.focus.x, y: y + self.focus.y, color });
+      //console.log(`${x},${y}`)
+      if (x >= 0 && x < self.focus.width && y >= 0 && y < self.focus.height) {
+        self.pixelGrid.setPixel({ x: x + self.focus.x, y: y + self.focus.y, color });
+      }
     }
     function init({ width, height }) {
       self.pixelGrid.init({ width, height });
     }
+    function setFocusedSprite({ x, y }) {
+      self.focus.x = x * self.spriteSize;
+      self.focus.y = y * self.spriteSize;
+    }
     return {
       init,
       setPixelRelativeToFocus,
+      setFocusedSprite,
     };
   });
 
