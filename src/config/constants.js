@@ -19,8 +19,14 @@ const pico8PaletteColors = [
     { index: 15, color: "#FFCCAA", row: 3, isLight: true },
 ];
 
+const colorMap = {};
+
+pico8PaletteColors.forEach((color) => {
+    colorMap[color.index] = color.color;
+});
+
 let colorRowGroups = groupBy(pico8PaletteColors, 'row');
 // group into array of rows
 const colorRows = keys(colorRowGroups).map((key) => colorRowGroups[key]);
 
-export { pico8PaletteColors, colorRows };
+export { pico8PaletteColors, colorRows, colorMap };

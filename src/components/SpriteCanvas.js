@@ -1,12 +1,13 @@
 import { useCallback } from "react";
 import { Animated, View, Pressable } from "react-native";
-import { pico8PaletteColors } from "../config/constants";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import { observer } from "mobx-react-lite";
+import Pixel from './Pixel';
 
-function positionToPixel({x, y, boxSize}) {
+function positionToPixel({x, y}) {
   const maxIndex = 7;
-  let xfin = Math.floor(x / boxSize);
-  let yfin = Math.floor(y / boxSize);
+  let xfin = Math.floor(x / pixelSize);
+  let yfin = Math.floor(y / pixelSize);
   if (yfin > maxIndex) {
     yfin = maxIndex;
   }
@@ -19,30 +20,30 @@ function positionToPixel({x, y, boxSize}) {
   }
 }
 
-function Pixel({ color, boxSize, x, y }) {
-  return (
-    <View
-      style={{
-        width: boxSize,
-        height: boxSize,
-        backgroundColor: color,
-      }}
-    />
-  );
-}
+const pixelSize = 40;
 
-export default function SpriteCanvas({ canvas, onPressPixel, isEditable = true, boxSize = 40 }) {
+const PixelLine = observer(({ pixels }) => {
+  return (
+    <View style={{ flexDirection: "row" }}>
+      {pixels.map((pixel) => (
+        <Pixel key={pixel.id} size={pixelSize} pixel={pixel} />
+      ))}
+    </View>
+  );
+});
+
+const SpriteCanvas = observer(({ spriteGrid, onPressPixel, isEditable = true }) => {
   const dragGesture = Gesture.Pan().onUpdate((e) => {
     const x = e.x;
     const y = e.y;
-    onPressPixel(positionToPixel({x, y, boxSize}));
+    onPressPixel(positionToPixel({x, y}));
     //console.log(`dragGesture: ${e.x}, ${e.y}`);
   });
 
   const tapGesture = Gesture.Tap().onTouchesDown((e) => {
     const x = e.allTouches[0].x;
     const y = e.allTouches[0].y;
-    onPressPixel(positionToPixel({x, y, boxSize}));
+    onPressPixel(positionToPixel({x, y}));
     //console.log(`tapGesture: ${e.allTouches[0].x}, ${e.allTouches[0].y}`);
   });
 
@@ -53,23 +54,12 @@ export default function SpriteCanvas({ canvas, onPressPixel, isEditable = true, 
   return (
     <MaybeGestureDetector gesture={composed}>
       <View>
-        {canvas.grid.map((row, yIndex) => (
-          <View key={yIndex.toString()} style={{ flexDirection: "row" }}>
-            {row.map((colorIndex, xIndex) => (
-              <View key={xIndex.toString()}>
-                <Pixel
-                  boxSize={boxSize}
-                  color={
-                    pico8PaletteColors.find((c) => c.index === colorIndex).color
-                  }
-                  x={xIndex}
-                  y={yIndex}
-                />
-              </View>
-            ))}
-          </View>
+        {spriteGrid.lines.map((line, yIndex) => (
+          <PixelLine key={yIndex.toString()} pixels={line} />
         ))}
       </View>
     </MaybeGestureDetector>
   );
-}
+});
+
+export default SpriteCanvas;

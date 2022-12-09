@@ -1,6 +1,5 @@
 {
   "expo": {
-    "jsEngine": "hermes",
     "name": "eight-mate",
     "slug": "eight-mate",
     "version": "1.0.0",

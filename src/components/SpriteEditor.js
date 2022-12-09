@@ -1,25 +1,23 @@
 import { useCallback } from "react";
 import { View, Text, Pressable } from "react-native";
-import { sizes } from "../config/styles";
+import { observer } from "mobx-react-lite";
 import Colors from "./Colors";
 import SpriteCanvas from "./SpriteCanvas";
+import Pixel from './Pixel';
 
 const emptyFn = () => {};
 
-function PressableMiniSprite({ sprite, index, onPressSprite, isSelected }) {
+const borderWidth = 4;
+const pixelSize = 40 / 8;
+const spriteSize = pixelSize * 8;
+
+const PressableSpriteOverlay = observer(({ x, y, onPressSprite, isSelected }) => {
   const onPress = useCallback(() => {
-    onPressSprite(index);
-  }, [onPressSprite, index]);
+    onPressSprite({ x, y });
+  }, [onPressSprite, x, y]);
   return (
     <Pressable index={index.toString()} onPress={onPress}>
-      <View>
-        <SpriteCanvas
-          key={index.toString()}
-          canvas={sprite}
-          onPressPixel={emptyFn}
-          isEditable={false}
-          boxSize={5}
-        />
+      <View style={{ height: pixelSize, width: pixelSize, }}>
         {isSelected && (
           <View
             style={{
@@ -36,41 +34,43 @@ function PressableMiniSprite({ sprite, index, onPressSprite, isSelected }) {
       </View>
     </Pressable>
   );
-}
+});
 
-function SpriteSheet({ sprites, onPressSprite, selectedSpriteIndex }) {
+const PixelLine = observer(({ pixels }) => {
   return (
-    <View
-      style={{
-        width: 40 * 8 + 8,
-        flexDirection: "row",
-        borderColor: "#000000",
-        borderWidth: 4,
-        flexWrap: "wrap",
-      }}
-    >
-      {sprites.map((sprite, index) => (
-        <PressableMiniSprite
-          key={index.toString()}
-          sprite={sprite}
-          index={index}
-          onPressSprite={onPressSprite}
-          isSelected={selectedSpriteIndex === index}
-        />
+    <View style={{ flexDirection: "row" }}>
+      {pixels.map((pixel) => (
+        <Pixel key={pixel.id} size={pixelSize} pixel={pixel} />
       ))}
     </View>
   );
-}
+});
 
-export default function SpriteEditor({
+const SpriteSheet = observer(({ spriteSheetGrid }) => {
+  return (
+    <View
+      style={{
+        width: spriteSize * 8 + borderWidth * 2,
+        flexDirection: "row",
+        borderColor: "#000000",
+        borderWidth,
+        flexWrap: "wrap",
+      }}
+    >
+      {spriteSheetGrid.lines.map((line, index) => (
+        <PixelLine pixels={line} key={index.toString()} />
+      ))}
+    </View>
+  );
+});
+
+const SpriteEditor = observer(({
   onPressColor = () => {},
   selectedColorIndex,
-  canvas,
-  onPressCanvasPixel,
-  sprites,
-  onPressSprite,
-  selectedSpriteIndex,
-}) {
+  focusedSpriteGrid,
+  onPressFocusedSpritePixel,
+  spriteSheetGrid
+}) => {
   return (
     <View
       style={{ flex: 1, justifyContent: "space-between", alignItems: "center" }}
@@ -92,14 +92,14 @@ export default function SpriteEditor({
             borderWidth: 4,
           }}
         >
-          <SpriteCanvas canvas={canvas} onPressPixel={onPressCanvasPixel} />
+          <SpriteCanvas spriteGrid={focusedSpriteGrid} onPressPixel={onPressFocusedSpritePixel} />
         </View>
       </View>
       <SpriteSheet
-        sprites={sprites}
-        selectedSpriteIndex={selectedSpriteIndex}
-        onPressSprite={onPressSprite}
+        spriteSheetGrid={spriteSheetGrid}
       />
     </View>
   );
-}
+});
+
+export default SpriteEditor;
